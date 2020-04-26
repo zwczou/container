@@ -73,6 +73,16 @@ func (c *Container) Load() error {
 	return nil
 }
 
+// 导出扩展
+func (c *Container) Extensions() (exts []Provider) {
+	c.RLock()
+	defer c.RUnlock()
+	for _, name := range c.names {
+		exts = append(exts, c.extensions[name])
+	}
+	return
+}
+
 // 注销扩展
 func (c *Container) Exit() {
 	c.RLock()

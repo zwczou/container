@@ -14,6 +14,10 @@ func Pre(ext Provider) {
 	app.Pre(ext)
 }
 
+func Extensions() (exts []Provider) {
+	return app.Extensions()
+}
+
 func Load() error {
 	return app.Load()
 }
