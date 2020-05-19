@@ -21,6 +21,7 @@ type Container struct {
 	sync.RWMutex
 	inject.Injector
 	*pubsub.PubSub
+	Metadata
 	names      []string
 	extensions map[string]Provider
 }
