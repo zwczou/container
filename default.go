@@ -6,16 +6,24 @@ func App() *Container {
 	return app
 }
 
-func Use(ext Provider) {
-	app.Use(ext)
+func Front(ext Provider) {
+	app.Front(ext)
 }
 
-func Pre(ext Provider) {
-	app.Pre(ext)
+func Push(ext Provider) {
+	app.Push(ext)
 }
 
-func Extensions() (exts []Provider) {
-	return app.Extensions()
+func Before(name string, ext Provider) {
+	app.Before(name, ext)
+}
+
+func After(name string, ext Provider) {
+	app.After(name, ext)
+}
+
+func All() []Provider {
+	return app.All()
 }
 
 func Load() error {
