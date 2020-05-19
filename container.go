@@ -15,11 +15,9 @@ type Provider interface {
 	Exit()
 }
 
-// 自带依赖注射功能
 // 自带pub/sub用于在扩展之间通信
 type Container struct {
 	sync.RWMutex
-	inject.Injector
 	*pubsub.PubSub
 	Metadata
 	names      []string
