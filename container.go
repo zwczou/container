@@ -4,7 +4,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/codegangsta/inject"
 	"github.com/cskr/pubsub"
 	"github.com/sirupsen/logrus"
 )
@@ -26,7 +25,6 @@ type Container struct {
 
 func New() *Container {
 	c := &Container{
-		Injector:   inject.New(),
 		PubSub:     pubsub.New(0),
 		extensions: make(map[string]Provider),
 	}
