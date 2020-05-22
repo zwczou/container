@@ -32,73 +32,28 @@ func New() *Container {
 }
 
 // 前置注册扩展
-func (c *Container) Front(ext Provider) *Container {
+func (c *Container) Front(exts ...Provider) *Container {
 	c.Lock()
-	if _, ok := c.existNames[ext.Name()]; !ok {
-		c.existNames[ext.Name()] = true
-		c.extensions = append([]Provider{ext}, c.extensions...)
+	for _, ext := range exts {
+		if _, ok := c.existNames[ext.Name()]; !ok {
+			c.existNames[ext.Name()] = true
+			c.extensions = append([]Provider{ext}, c.extensions...)
+		}
 	}
 	c.Unlock()
 	return c
 }
 
 // 注册扩展
-func (c *Container) Push(ext Provider) *Container {
+func (c *Container) Push(exts ...Provider) *Container {
 	c.Lock()
-	if _, ok := c.existNames[ext.Name()]; !ok {
-		c.existNames[ext.Name()] = true
-		c.extensions = append(c.extensions, ext)
+	for _, ext := range exts {
+		if _, ok := c.existNames[ext.Name()]; !ok {
+			c.existNames[ext.Name()] = true
+			c.extensions = append(c.extensions, ext)
+		}
 	}
 	c.Unlock()
-	return c
-}
-
-func (c *Container) Before(name string, ext Provider) *Container {
-	var isOk bool
-	var newExts []Provider
-
-	for _, e := range c.extensions {
-		if ext.Name() == e.Name() {
-			continue
-		}
-		if e.Name() == name {
-			isOk = true
-			newExts = append(newExts, ext)
-		}
-		newExts = append(newExts, e)
-	}
-
-	if !isOk {
-		newExts = append([]Provider{ext}, newExts...)
-	}
-	c.existNames[ext.Name()] = true
-	c.extensions = newExts
-	return c
-}
-
-// 可以注册在指定扩展后面
-// 如果指定扩展不存在，追加在最后
-// 如果被追加的扩展已经存在会重新调整顺序
-func (c *Container) After(name string, ext Provider) *Container {
-	var isOk bool
-	var newExts []Provider
-
-	for _, e := range c.extensions {
-		if ext.Name() == e.Name() {
-			continue
-		}
-		newExts = append(newExts, e)
-		if e.Name() == name {
-			isOk = true
-			newExts = append(newExts, ext)
-		}
-	}
-
-	if !isOk {
-		newExts = append(newExts, ext)
-	}
-	c.existNames[ext.Name()] = true
-	c.extensions = newExts
 	return c
 }
 

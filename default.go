@@ -6,20 +6,12 @@ func App() *Container {
 	return app
 }
 
-func Front(ext Provider) {
-	app.Front(ext)
+func Front(exts ...Provider) {
+	app.Front(exts...)
 }
 
-func Push(ext Provider) {
-	app.Push(ext)
-}
-
-func Before(name string, ext Provider) {
-	app.Before(name, ext)
-}
-
-func After(name string, ext Provider) {
-	app.After(name, ext)
+func Push(exts ...Provider) {
+	app.Push(exts...)
 }
 
 func All() []Provider {
