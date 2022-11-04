@@ -72,7 +72,7 @@ func (q *defaultQueue) Listen(fn any) {
 
 	funcValue := reflect.ValueOf(fn)
 	funcType := funcValue.Type()
-	queueType := reflect.TypeOf(q)
+	queueType := reflect.TypeOf((*Queuer)(nil)).Elem()
 	var limit *limiter.ConcurrencyLimiter
 	if q.concurrency > 1 {
 		limit = limiter.NewConcurrencyLimiter(q.concurrency)
@@ -87,7 +87,7 @@ func (q *defaultQueue) Listen(fn any) {
 
 			// 如果需要传入Queue自动填充
 			if funcType.NumIn() > 0 && funcType.In(0) == queueType {
-				if len(values) == 0 || values[0].Type() != queueType {
+				if len(values) == 0 || !values[0].Type().Implements(queueType) {
 					values = append([]reflect.Value{reflect.ValueOf(q)}, values...)
 				}
 			}
