@@ -9,17 +9,6 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type Container interface {
-	Add(Provider)
-	Load() error
-	Exit()
-	Set(...interface{})
-	Get(...interface{}) error
-	MustGet(...interface{})
-	Pub(string, ...interface{})
-	TryPub(string, ...interface{})
-}
-
 type defaultContainer struct {
 	lock       sync.RWMutex
 	valueLock  sync.RWMutex
@@ -95,10 +84,10 @@ func (c *defaultContainer) Exit() {
 	}
 }
 
-func (c *defaultContainer) Pub(name string, params ...interface{}) {
+func (c *defaultContainer) Pub(name string, params ...any) {
 	c.pubSub.Pub(params, name)
 }
 
-func (c *defaultContainer) TryPub(name string, params ...interface{}) {
+func (c *defaultContainer) TryPub(name string, params ...any) {
 	c.pubSub.TryPub(params, name)
 }

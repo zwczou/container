@@ -7,12 +7,6 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type Queuer interface {
-	Sub()
-	Unsub()
-	Listen(fn any)
-}
-
 type queueConfig struct {
 	concurrency int
 	size        int
@@ -41,7 +35,7 @@ type defaultQueue struct {
 	name        string
 	app         *defaultContainer
 	concurrency int
-	msgChan     chan interface{}
+	msgChan     chan any
 }
 
 func (c *defaultContainer) Queue(name string, opts ...QueueOption) Queuer {
@@ -55,7 +49,7 @@ func (c *defaultContainer) Queue(name string, opts ...QueueOption) Queuer {
 		app:         c,
 		name:        name,
 		concurrency: cfg.concurrency,
-		msgChan:     make(chan interface{}, cfg.size),
+		msgChan:     make(chan any, cfg.size),
 	}
 
 	c.valueLock.Lock()
@@ -72,7 +66,7 @@ func (q *defaultQueue) Unsub() {
 	q.app.pubSub.Unsub(q.msgChan, q.name)
 }
 
-func (q *defaultQueue) Listen(fn interface{}) {
+func (q *defaultQueue) Listen(fn any) {
 	q.Sub()
 	logrus.WithField("queue", q.name).Info("queue init")
 
@@ -84,7 +78,7 @@ func (q *defaultQueue) Listen(fn interface{}) {
 		limit = limiter.NewConcurrencyLimiter(q.concurrency)
 	}
 
-	procFunc := func(vs ...interface{}) func() {
+	procFunc := func(vs ...any) func() {
 		return func() {
 			var values []reflect.Value
 			for _, val := range vs {
@@ -111,7 +105,7 @@ func (q *defaultQueue) Listen(fn interface{}) {
 				return
 			}
 
-			params := v.([]interface{})
+			params := v.([]any)
 			if q.concurrency > 1 {
 				_, _ = limit.Execute(procFunc(params...))
 			} else {

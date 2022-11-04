@@ -5,7 +5,7 @@ import (
 	"reflect"
 )
 
-func (c *defaultContainer) Set(vals ...interface{}) {
+func (c *defaultContainer) Set(vals ...any) {
 	c.valueLock.Lock()
 	for _, val := range vals {
 		c.values[reflect.TypeOf(val)] = reflect.ValueOf(val)
@@ -33,7 +33,7 @@ func (c *defaultContainer) getValue(t reflect.Type) reflect.Value {
 	return val
 }
 
-func (c *defaultContainer) Get(vals ...interface{}) error {
+func (c *defaultContainer) Get(vals ...any) error {
 	for _, val := range vals {
 		v := reflect.ValueOf(val)
 		if value := c.getValue(v.Type()); value.IsValid() {
@@ -58,7 +58,7 @@ func (c *defaultContainer) Get(vals ...interface{}) error {
 	return nil
 }
 
-func (c *defaultContainer) MustGet(vals ...interface{}) {
+func (c *defaultContainer) MustGet(vals ...any) {
 	err := c.Get(vals...)
 	if err != nil {
 		panic(err)
