@@ -9,6 +9,7 @@ type Container interface {
 	MustGet(...any)
 	Pub(string, ...any)
 	TryPub(string, ...any)
+	Queue(string, ...QueueOption) Queuer
 }
 
 type Provider interface {
