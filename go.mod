@@ -1,4 +1,4 @@
-module github.com/zwczou/container
+module github.com/zwczou/container/v2
 
 go 1.19
 

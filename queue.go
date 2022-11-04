@@ -52,9 +52,9 @@ func (c *defaultContainer) Queue(name string, opts ...QueueOption) Queuer {
 		msgChan:     make(chan any, cfg.size),
 	}
 
-	c.valueLock.Lock()
+	c.lock.Lock()
 	c.queues = append(c.queues, queue)
-	c.valueLock.Unlock()
+	c.lock.Unlock()
 	return queue
 }
 

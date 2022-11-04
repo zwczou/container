@@ -79,9 +79,11 @@ func (c *defaultContainer) Exit() {
 		c.pubSub.Shutdown()
 	}
 
+	c.lock.RLock()
 	for _, queue := range c.queues {
 		queue.Unsub()
 	}
+	c.lock.RUnlock()
 }
 
 func (c *defaultContainer) Pub(name string, params ...any) {
