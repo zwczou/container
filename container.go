@@ -87,3 +87,12 @@ func (c *defaultContainer) Pub(name string, params ...any) {
 func (c *defaultContainer) TryPub(name string, params ...any) {
 	c.pubSub.TryPub(params, name)
 }
+
+var container Container
+
+func Default() Container {
+	if container == nil {
+		container = New()
+	}
+	return container
+}
